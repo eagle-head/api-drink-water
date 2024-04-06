@@ -22,7 +22,7 @@ public class UserService {
     @Transactional
     public User create(User user) {
         if (emailExists(user.getEmail())) {
-            throw new EmailAlreadyUsedException("The email " + user.getEmail() + " is already in use.");
+            throw new EmailAlreadyUsedException("The email provided is already in use.");
         }
 
         return this.userRepository.save(user);
