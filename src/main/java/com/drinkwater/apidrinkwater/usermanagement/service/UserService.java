@@ -30,7 +30,7 @@ public class UserService {
 
     public Optional<User> findById(Long id) {
         return Optional.ofNullable(this.userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("User not found.")));
     }
 
     private boolean emailExists(String email) {
