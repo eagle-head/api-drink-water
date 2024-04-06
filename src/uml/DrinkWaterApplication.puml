@@ -1,0 +1,48 @@
+@startuml DrinkWaterApplication
+
+class User {
+  - email: String
+  - password: String
+  - firstName: String
+  - lastName: String
+  - birthDate: Date
+  - biologicalSex: BiologicalSex
+  - weight: Double
+  - weightUnit: WeightUnit
+  - height: Double
+  - heightUnit: HeightUnit
+}
+
+class AlarmSettings {
+  - intervalMinutes: Int
+  - startTime: Time
+  - endTime: Time
+}
+
+class WaterIntake {
+  - dateTimeUTC: DateTime
+  - volume: Double
+  - volumeUnit: VolumeUnit
+}
+
+enum BiologicalSex {
+  MALE,
+  FEMALE;
+}
+
+enum WeightUnit {
+  KG
+}
+
+enum HeightUnit {
+  CM
+}
+
+enum VolumeUnit {
+  ML
+}
+
+User "1" *-- "1" AlarmSettings : "has >"
+User "1" -- "0..*" WaterIntake : "logs >"
+
+@enduml
