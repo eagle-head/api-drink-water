@@ -4,9 +4,10 @@ import com.drinkwater.apidrinkwater.usermanagement.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
 import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/me")
@@ -20,24 +21,29 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
-        User newUser = this.userService.create(user);
+        User newUser = this.userService.save(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
-        return this.userService.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+        User user = this.userService.findById(id);
+
+        return ResponseEntity.ok(user);
     }
 
-    // TODO: Update user - PATCH '/update'
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
+        User user = this.userService.update(id, fields);
+
+        return ResponseEntity.ok(user);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         String message = this.userService.delete(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(message);
+        return ResponseEntity.ok(message);
     }
 }

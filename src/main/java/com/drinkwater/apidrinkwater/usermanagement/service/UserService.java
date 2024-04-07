@@ -2,16 +2,15 @@ package com.drinkwater.apidrinkwater.usermanagement.service;
 
 import com.drinkwater.apidrinkwater.usermanagement.exception.EmailAlreadyUsedException;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.drinkwater.apidrinkwater.usermanagement.model.User;
 import com.drinkwater.apidrinkwater.usermanagement.repository.UserRepository;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.util.ReflectionUtils;
 
-import java.util.Optional;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -23,7 +22,7 @@ public class UserService {
     }
 
     @Transactional
-    public User create(User user) {
+    public User save(User user) {
         if (this.userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException("The email provided is already in use.");
         }
@@ -31,11 +30,30 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
-    public Optional<User> findById(Long id) {
-        return Optional.ofNullable(this.userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found.")));
+    @Transactional(readOnly = true)
+    public User findById(Long id) {
+        return this.userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found."));
     }
 
+    // tratar o erro de obejtos aninhandos
+    @Transactional
+    public User update(Long id, Map<String, Object> fields) {
+        User existingUser = this.userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        fields.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(User.class, key);
+            if (field != null) {
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, existingUser, value);
+            }
+        });
+
+        return this.userRepository.save(existingUser);
+    }
+
+    @Transactional
     public String delete(Long id) {
         if (!this.userRepository.existsById(id)) {
             throw new EntityNotFoundException("Deletion is not necessary as the user does not exist.");
@@ -45,8 +63,4 @@ public class UserService {
 
         return "User successfully deleted.";
     }
-
-    // TODO: Update user - PATCH '/update'
-
-
 }
