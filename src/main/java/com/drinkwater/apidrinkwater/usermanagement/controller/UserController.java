@@ -19,8 +19,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody User userCreateDTO) {
-        User newUser = this.userService.create(userCreateDTO);
+    public ResponseEntity<User> create(@RequestBody User user) {
+        User newUser = this.userService.create(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
@@ -32,7 +32,12 @@ public class UserController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    // TODO: Update user - PUT or PATCH '/update'
+    // TODO: Update user - PATCH '/update'
 
-    // TODO: Delete user - DELETE '/delete'
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        String message = this.userService.delete(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 }
