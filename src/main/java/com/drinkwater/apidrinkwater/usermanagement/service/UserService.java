@@ -1,5 +1,6 @@
 package com.drinkwater.apidrinkwater.usermanagement.service;
 
+import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import com.drinkwater.apidrinkwater.usermanagement.exception.EmailAlreadyUsedException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,11 @@ import java.util.Map;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final WaterIntakeService waterIntakeService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, WaterIntakeService waterIntakeService) {
         this.userRepository = userRepository;
+        this.waterIntakeService = waterIntakeService;
     }
 
     @Transactional
@@ -58,6 +61,8 @@ public class UserService {
         if (!this.userRepository.existsById(id)) {
             throw new EntityNotFoundException("Deletion is not necessary as the user does not exist.");
         }
+
+        this.waterIntakeService.deleteWaterIntakesByUserId(id);
 
         this.userRepository.deleteById(id);
 

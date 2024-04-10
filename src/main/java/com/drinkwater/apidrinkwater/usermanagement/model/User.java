@@ -60,13 +60,4 @@ public class User {
     @JoinColumn(name = "alarm_settings_id", referencedColumnName = "id", nullable = false)
     @JsonManagedReference
     private AlarmSettings alarmSettings;
-
-    /**
-     * This field needs to be addressed in the future because when retrieving the user,
-     * I do not want to fetch this "waterIntakes" collection.
-     * Over time, it may become excessively large and hinder the performance of a simple GET request.
-     */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<WaterIntake> waterIntakes = new ArrayList<>();
 }
