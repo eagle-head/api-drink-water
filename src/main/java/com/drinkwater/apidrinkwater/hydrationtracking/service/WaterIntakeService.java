@@ -14,7 +14,7 @@ public class WaterIntakeService {
     }
 
     @Transactional
-    public void deleteWaterIntakesByUserId(Long userId) {
-        this.waterIntakeRepository.deleteByUserId(userId);
+    public void deleteAllWaterIntakesByUserId(Long userId) {
+        this.waterIntakeRepository.deleteAllByUserId(userId);
     }
 }

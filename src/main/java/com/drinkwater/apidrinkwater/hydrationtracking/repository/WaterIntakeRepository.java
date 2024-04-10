@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WaterIntakeRepository extends JpaRepository<WaterIntake, Long> {
 
-    void deleteByUserId(Long id);
+    void deleteAllByUserId(Long id);
 }

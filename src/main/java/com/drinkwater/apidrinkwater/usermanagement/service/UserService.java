@@ -62,7 +62,7 @@ public class UserService {
             throw new EntityNotFoundException("Deletion is not necessary as the user does not exist.");
         }
 
-        this.waterIntakeService.deleteWaterIntakesByUserId(id);
+        this.waterIntakeService.deleteAllWaterIntakesByUserId(id);
 
         this.userRepository.deleteById(id);
 
