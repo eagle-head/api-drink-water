@@ -30,7 +30,7 @@ public class WaterIntake {
     @Column(name = "volume_unit", nullable = false)
     private VolumeUnit volumeUnit;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;

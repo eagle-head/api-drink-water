@@ -3,6 +3,7 @@ package com.drinkwater.apidrinkwater.usermanagement.service;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import com.drinkwater.apidrinkwater.usermanagement.exception.EmailAlreadyUsedException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final WaterIntakeService waterIntakeService;
 
-    public UserService(UserRepository userRepository, WaterIntakeService waterIntakeService) {
+    public UserService(UserRepository userRepository, @Lazy WaterIntakeService waterIntakeService) {
         this.userRepository = userRepository;
         this.waterIntakeService = waterIntakeService;
     }
@@ -39,11 +40,11 @@ public class UserService {
             .orElseThrow(() -> new EntityNotFoundException("User not found."));
     }
 
-    // tratar o erro de obejtos aninhandos
+    // tratar o erro de obejtos aninhandos, o update de AlarmSettings está
+    // em seu próprio contexto
     @Transactional
     public User update(Long id, Map<String, Object> fields) {
-        User existingUser = this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+        User existingUser = this.findById(id);
 
         fields.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(User.class, key);
@@ -58,9 +59,7 @@ public class UserService {
 
     @Transactional
     public String delete(Long id) {
-        if (!this.userRepository.existsById(id)) {
-            throw new EntityNotFoundException("Deletion is not necessary as the user does not exist.");
-        }
+        this.findById(id);
 
         this.waterIntakeService.deleteAllWaterIntakesByUserId(id);
 

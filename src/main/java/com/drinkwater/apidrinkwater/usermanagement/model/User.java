@@ -1,15 +1,15 @@
 package com.drinkwater.apidrinkwater.usermanagement.model;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
-import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.util.Date;
-import java.util.List;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -52,12 +52,22 @@ public class User {
     @Column(nullable = false)
     private double height;
 
+    @JsonIgnore
+    @CreationTimestamp
+    @Column(nullable = false)
+    private Date createdAt;
+
+    @JsonIgnore
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private Date updatedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "height_unit", nullable = false)
     private HeightUnit heightUnit;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "alarm_settings_id", referencedColumnName = "id", nullable = false)
-    @JsonManagedReference
+    @JsonIgnore
     private AlarmSettings alarmSettings;
 }

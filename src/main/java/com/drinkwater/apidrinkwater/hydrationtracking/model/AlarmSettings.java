@@ -1,7 +1,5 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.model;
 
-import com.drinkwater.apidrinkwater.usermanagement.model.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,8 +24,4 @@ public class AlarmSettings {
 
     @Column(name = "end_time", nullable = false)
     private Date endTime;
-
-    @OneToOne(mappedBy = "alarmSettings")
-    @JsonBackReference
-    private User user;
 }
