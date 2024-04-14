@@ -1,6 +1,8 @@
 package com.drinkwater.apidrinkwater.usermanagement.controller;
 
-import com.drinkwater.apidrinkwater.usermanagement.model.User;
+import com.drinkwater.apidrinkwater.usermanagement.dto.UserCreateDTO;
+import com.drinkwater.apidrinkwater.usermanagement.dto.UserResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,30 +22,30 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
-        User newUser = this.userService.save(user);
+    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserCreateDTO dto) {
+        UserResponseDTO newUser = this.userService.save(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        User user = this.userService.findById(id);
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
+        UserResponseDTO user = this.userService.findById(id);
 
         return ResponseEntity.ok(user);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        User user = this.userService.update(id, fields);
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
+        UserResponseDTO user = this.userService.update(id, fields);
 
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        String message = this.userService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        this.userService.delete(id);
 
-        return ResponseEntity.ok(message);
+        return ResponseEntity.noContent().build();
     }
 }

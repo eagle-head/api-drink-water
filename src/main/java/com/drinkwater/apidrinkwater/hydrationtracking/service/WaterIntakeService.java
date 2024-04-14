@@ -1,10 +1,7 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.service;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeCreateDTO;
-import com.drinkwater.apidrinkwater.hydrationtracking.mapper.WaterIntakeMapper;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.drinkwater.apidrinkwater.hydrationtracking.repository.WaterIntakeRepository;
-import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,23 +15,12 @@ import java.util.Map;
 public class WaterIntakeService {
 
     private final WaterIntakeRepository waterIntakeRepository;
-    private final UserService userService;
-    private final WaterIntakeMapper mapper;
 
-    public WaterIntakeService(WaterIntakeRepository waterIntakeRepository, UserService userService, WaterIntakeMapper mapper) {
+    public WaterIntakeService(WaterIntakeRepository waterIntakeRepository) {
         this.waterIntakeRepository = waterIntakeRepository;
-        this.userService = userService;
-        this.mapper = mapper;
     }
 
-    @Transactional
-    public WaterIntake createByUser(WaterIntakeCreateDTO dto) {
-        this.userService.findById(dto.getUserId());
-
-        WaterIntake waterIntake = this.mapper.toCreateDto(dto);
-
-        return this.waterIntakeRepository.save(waterIntake);
-    }
+    // TODO: createByUser
 
     @Transactional(readOnly = true)
     public WaterIntake findById(Long id) {

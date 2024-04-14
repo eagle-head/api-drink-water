@@ -1,6 +1,7 @@
 package com.drinkwater.apidrinkwater.usermanagement.model;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
+import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,9 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -70,4 +73,8 @@ public class User {
     @JoinColumn(name = "alarm_settings_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private AlarmSettings alarmSettings;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<WaterIntake> waterIntakes = new ArrayList<>();
 }

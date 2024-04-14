@@ -1,16 +1,14 @@
 package com.drinkwater.apidrinkwater.usermanagement.dto;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
 import com.drinkwater.apidrinkwater.usermanagement.model.BiologicalSex;
 import com.drinkwater.apidrinkwater.usermanagement.model.HeightUnit;
 import com.drinkwater.apidrinkwater.usermanagement.model.WeightUnit;
-
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class UserDTO {
+public class UserResponseDTO {
 
     private Long id;
     private String email;
@@ -22,5 +20,4 @@ public class UserDTO {
     private WeightUnit weightUnit;
     private double height;
     private HeightUnit heightUnit;
-    private AlarmSettings alarmSettings;
 }

@@ -1,9 +1,11 @@
 package com.drinkwater.apidrinkwater.usermanagement.service;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
+import com.drinkwater.apidrinkwater.usermanagement.dto.UserCreateDTO;
+import com.drinkwater.apidrinkwater.usermanagement.dto.UserResponseDTO;
 import com.drinkwater.apidrinkwater.usermanagement.exception.EmailAlreadyUsedException;
+import com.drinkwater.apidrinkwater.usermanagement.mapper.UserMapper;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,33 +20,41 @@ import java.util.Map;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final WaterIntakeService waterIntakeService;
+    private final UserMapper mapper;
 
-    public UserService(UserRepository userRepository, @Lazy WaterIntakeService waterIntakeService) {
+    public UserService(UserRepository userRepository, UserMapper mapper) {
         this.userRepository = userRepository;
-        this.waterIntakeService = waterIntakeService;
+        this.mapper = mapper;
     }
 
+    // Create method
     @Transactional
-    public User save(User user) {
-        if (this.userRepository.existsByEmail(user.getEmail())) {
+    public UserResponseDTO save(UserCreateDTO dto) {
+        if (this.userRepository.existsByEmail(dto.getEmail())) {
             throw new EmailAlreadyUsedException("The email provided is already in use.");
         }
 
-        return this.userRepository.save(user);
+        User newUser = this.mapper.toEntity(dto);
+        User savedUser = this.userRepository.save(newUser);
+
+        return this.mapper.toDto(savedUser);
     }
 
+    // Read method
     @Transactional(readOnly = true)
-    public User findById(Long id) {
+    public UserResponseDTO findById(Long id) {
         return this.userRepository.findById(id)
+            .map(mapper::toDto)
             .orElseThrow(() -> new EntityNotFoundException("User not found."));
     }
 
     // tratar o erro de obejtos aninhandos, o update de AlarmSettings está
     // em seu próprio contexto
+    // Update method
     @Transactional
-    public User update(Long id, Map<String, Object> fields) {
-        User existingUser = this.findById(id);
+    public UserResponseDTO update(Long id, Map<String, Object> fields) {
+        User existingUser = this.userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found."));
 
         fields.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(User.class, key);
@@ -54,17 +64,17 @@ public class UserService {
             }
         });
 
-        return this.userRepository.save(existingUser);
+        User savedUser = this.userRepository.save(existingUser);
+
+        return this.mapper.toDto(savedUser);
     }
 
+    // Delete method
     @Transactional
-    public String delete(Long id) {
-        this.findById(id);
-
-        this.waterIntakeService.deleteAllWaterIntakesByUserId(id);
+    public void delete(Long id) {
+        this.userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found."));
 
         this.userRepository.deleteById(id);
-
-        return "User successfully deleted.";
     }
 }

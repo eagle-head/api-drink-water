@@ -1,6 +1,5 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.controller;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeCreateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +18,7 @@ public class WaterIntakeController {
         this.waterIntakeService = waterIntakeService;
     }
 
-    @PostMapping
-    public ResponseEntity<WaterIntake> createByUser(WaterIntakeCreateDTO dto) {
-        WaterIntake waterIntake = this.waterIntakeService.createByUser(dto);
-
-        return ResponseEntity.ok(waterIntake);
-    }
+    // TODO: POST -> createByUser
 
     @GetMapping("/{id}")
     public ResponseEntity<WaterIntake> findById(@PathVariable Long id) {
