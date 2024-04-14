@@ -2,6 +2,7 @@ package com.drinkwater.apidrinkwater.usermanagement.controller;
 
 import com.drinkwater.apidrinkwater.usermanagement.dto.UserCreateDTO;
 import com.drinkwater.apidrinkwater.usermanagement.dto.UserResponseDTO;
+import com.drinkwater.apidrinkwater.usermanagement.dto.UserUpdateDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +37,8 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        UserResponseDTO user = this.userService.update(id, fields);
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
+        UserResponseDTO user = this.userService.update(id, dto);
 
         return ResponseEntity.ok(user);
     }

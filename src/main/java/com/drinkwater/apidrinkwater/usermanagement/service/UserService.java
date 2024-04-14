@@ -1,8 +1,8 @@
 package com.drinkwater.apidrinkwater.usermanagement.service;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import com.drinkwater.apidrinkwater.usermanagement.dto.UserCreateDTO;
 import com.drinkwater.apidrinkwater.usermanagement.dto.UserResponseDTO;
+import com.drinkwater.apidrinkwater.usermanagement.dto.UserUpdateDTO;
 import com.drinkwater.apidrinkwater.usermanagement.exception.EmailAlreadyUsedException;
 import com.drinkwater.apidrinkwater.usermanagement.mapper.UserMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -48,21 +48,13 @@ public class UserService {
             .orElseThrow(() -> new EntityNotFoundException("User not found."));
     }
 
-    // tratar o erro de obejtos aninhandos, o update de AlarmSettings está
-    // em seu próprio contexto
     // Update method
     @Transactional
-    public UserResponseDTO update(Long id, Map<String, Object> fields) {
+    public UserResponseDTO update(Long id, UserUpdateDTO updateDTO) {
         User existingUser = this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found."));
+            .orElseThrow(() -> new EntityNotFoundException("Unable to update: Entry not located."));
 
-        fields.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(User.class, key);
-            if (field != null) {
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, existingUser, value);
-            }
-        });
+        this.mapper.toEntity(updateDTO, existingUser);
 
         User savedUser = this.userRepository.save(existingUser);
 
@@ -73,7 +65,7 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found."));
+            .orElseThrow(() -> new EntityNotFoundException("Deletion failed: Entry not found."));
 
         this.userRepository.deleteById(id);
     }
