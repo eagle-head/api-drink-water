@@ -2,14 +2,22 @@ package com.drinkwater.apidrinkwater.hydrationtracking.dto;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.model.VolumeUnit;
 import lombok.Data;
-
+import jakarta.validation.constraints.*;
 import java.util.Date;
 
 @Data
 public class WaterIntakeCreateDTO {
 
+    @NotNull(message = "User ID is required.")
     private Long userId;
+
+    @Positive(message = "Volume must be a positive number.")
     private double volume;
+
+    @NotNull(message = "Date and time of intake is required.")
+    @PastOrPresent(message = "Date and time of intake must be in the past or present.")
     private Date dateTimeUTC;
+
+    @NotNull(message = "Volume unit is required.")
     private VolumeUnit volumeUnit;
 }

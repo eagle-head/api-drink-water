@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/me")
 public class UserController {

@@ -11,10 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.drinkwater.apidrinkwater.usermanagement.model.User;
 import com.drinkwater.apidrinkwater.usermanagement.repository.UserRepository;
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.Field;
-import java.util.Map;
 
 @Service
 public class UserService {
