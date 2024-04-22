@@ -14,8 +14,8 @@ import java.util.Date;
 @Data
 public class UserCreateDTO {
 
-    @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
     private String email;
 
     @NotBlank(message = "Password is required")

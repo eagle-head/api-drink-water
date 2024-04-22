@@ -12,10 +12,10 @@ import java.util.Date;
 public class UserUpdateDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Size(min = 3, max = 50, message = "First name must not exceed 50 characters")
+    @Size(min = 3, max = 50, message = "First name must be between 3 and 50 characters")
     private String firstName;
 
-    @Size(min = 3, max = 50, message = "Last name must not exceed 50 characters")
+    @Size(min = 3, max = 50, message = "Last name must be between 3 and 50 characters")
     private String lastName;
 
     @Past(message = "Birth date must be in the past")

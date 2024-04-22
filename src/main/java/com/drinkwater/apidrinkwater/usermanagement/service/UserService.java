@@ -41,14 +41,14 @@ public class UserService {
     public UserResponseDTO findById(Long id) {
         return this.userRepository.findById(id)
             .map(mapper::toDto)
-            .orElseThrow(() -> new EntityNotFoundException("User not found."));
+            .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id + "."));
     }
 
     // Update method
     @Transactional
     public UserResponseDTO update(Long id, UserUpdateDTO updateDTO) {
         User existingUser = this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Unable to update: Entry not located."));
+            .orElseThrow(() -> new EntityNotFoundException("Unable to update user: No user found with ID " + id + "."));
 
         this.mapper.toEntity(updateDTO, existingUser);
 
@@ -61,7 +61,7 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Deletion failed: Entry not found."));
+            .orElseThrow(() -> new EntityNotFoundException("Deletion failed: No user found with ID " + id + "."));
 
         this.userRepository.deleteById(id);
     }

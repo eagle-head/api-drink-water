@@ -1,0 +1,31 @@
+package com.drinkwater.apidrinkwater.exception;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.net.URI;
+import java.util.Date;
+import java.util.List;
+
+@JsonInclude(Include.NON_NULL)
+@Getter
+@Builder
+public class ProblemDetailResponse {
+
+    private int status;
+    private URI type;
+    private String title;
+    private String detail;
+    private Date timestamp;
+    private String userMessage;
+    private List<Field> fields;
+
+    @Getter
+    @Builder
+    public static class Field {
+        private String name;
+        private String userMessage;
+    }
+}
