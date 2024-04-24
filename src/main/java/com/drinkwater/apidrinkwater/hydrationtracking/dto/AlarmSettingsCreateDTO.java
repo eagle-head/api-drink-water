@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class AlarmSettingsCreateDTO {
 
-    @Min(value = 15, message = "Interval must be at least 15 minutes")
+    @Min(15)
     private int intervalMinutes;
 
     @NotNull(message = "Start time is required")

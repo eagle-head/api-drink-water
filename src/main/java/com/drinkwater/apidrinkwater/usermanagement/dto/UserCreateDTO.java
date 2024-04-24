@@ -14,40 +14,40 @@ import java.util.Date;
 @Data
 public class UserCreateDTO {
 
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email is required")
+    @Email
+    @NotBlank
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @NotBlank
+    @Size(min = 6, max = 20)
     private String password;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank
     private String lastName;
 
-    @NotNull(message = "Birth date is required")
-    @Past(message = "Birth date must be in the past")
+    @NotNull
+    @Past
     private Date birthDate;
 
-    @NotNull(message = "Biological sex is required")
+    @NotNull
     private BiologicalSex biologicalSex;
 
-    @Min(value = 0, message = "Weight must be greater than zero")
+    @Min(45)
     private double weight;
 
-    @NotNull(message = "Weight unit is required")
+    @NotNull
     private WeightUnit weightUnit;
 
-    @Min(value = 0, message = "Height must be greater than zero")
+    @Min(100)
     private double height;
 
-    @NotNull(message = "Height unit is required")
+    @NotNull
     private HeightUnit heightUnit;
 
-    @NotNull(message = "Alarm settings are required")
+    @NotNull
     @Valid
     private AlarmSettingsCreateDTO alarmSettings;
 }
