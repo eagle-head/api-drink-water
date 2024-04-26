@@ -77,4 +77,21 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<WaterIntake> waterIntakes = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "id=" + id +
+            ", email='" + email + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", birthDate=" + birthDate +
+            ", biologicalSex=" + biologicalSex +
+            ", weight=" + weight +
+            ", weightUnit=" + weightUnit +
+            ", height=" + height +
+            ", heightUnit=" + heightUnit +
+            ", alarmSettingsId=" + (alarmSettings != null ? alarmSettings.getId() : "null") +
+            '}';
+    }
 }

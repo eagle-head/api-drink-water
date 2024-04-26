@@ -34,4 +34,15 @@ public class WaterIntake {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;
+
+    @Override
+    public String toString() {
+        return "WaterIntake{" +
+            "id=" + id +
+            ", dateTimeUTC=" + dateTimeUTC +
+            ", volume=" + volume +
+            ", volumeUnit=" + volumeUnit +
+            ", userId=" + (user != null ? user.getId() : "null") +
+            '}';
+    }
 }

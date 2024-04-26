@@ -50,6 +50,10 @@ public class UserService {
         User existingUser = this.userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Unable to update user: No user found with ID " + id + "."));
 
+        if (updateDTO.getEmail() != null && this.userRepository.existsByEmailAndIdNot(updateDTO.getEmail(), id)) {
+            throw new EmailAlreadyUsedException("The email provided is already in use.");
+        }
+
         this.mapper.toEntity(updateDTO, existingUser);
 
         User savedUser = this.userRepository.save(existingUser);
