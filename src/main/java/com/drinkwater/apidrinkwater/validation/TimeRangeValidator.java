@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstraint, AlarmSettingsCreateDTO> {
 
+    private static final long FIFTEEN_MINUTES_IN_MILLIS = 15 * 60 * 1000;
+
     @Override
     public boolean isValid(AlarmSettingsCreateDTO dto, ConstraintValidatorContext context) {
         if (dto.getStartTime() == null || dto.getEndTime() == null) {
@@ -30,7 +32,7 @@ public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstrai
         }
 
         long difference = dto.getEndTime().getTime() - dto.getStartTime().getTime();
-        if (difference < 15 * 60 * 1000) {
+        if (difference < FIFTEEN_MINUTES_IN_MILLIS) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("{time.range.min.interval}").addConstraintViolation();
 

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -173,7 +174,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
 
         ProblemDetailResponseType type = ProblemDetailResponseType.VALIDATION_ERROR;
-        String detail = "One or more fields are invalid. Please fill them out correctly and try again.";
+        String detail = "Validation error: some entries are incorrect or incomplete. Please review the details and correct them.";
 
         HttpStatus status = HttpStatus.resolve(statusCode.value());
         if (status == null) {
@@ -182,14 +183,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         BindingResult bindingResult = ex.getBindingResult();
 
-        List<ProblemDetailResponse.Field> problemFields = bindingResult
-            .getFieldErrors()
+        List<ProblemDetailResponse.Constraint> constraints = bindingResult
+            .getAllErrors()
             .stream()
-            .map(fieldError -> {
-                String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+            .map(objectError -> {
+                String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
 
-                return ProblemDetailResponse.Field.builder()
-                    .name(fieldError.getField())
+                String name = objectError.getObjectName();
+
+                if (objectError instanceof FieldError) {
+                    name = ((FieldError) objectError).getField();
+                }
+
+                return ProblemDetailResponse.Constraint.builder()
+                    .name(name)
                     .userMessage(message)
                     .build();
             })
@@ -197,7 +204,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemDetailResponse response = createProblemDetailResponseBuilder(status, type, detail)
             .userMessage(detail)
-            .fields(problemFields)
+            .constraints(constraints)
             .build();
 
         return this.handleExceptionInternal(ex, response, headers, status, request);

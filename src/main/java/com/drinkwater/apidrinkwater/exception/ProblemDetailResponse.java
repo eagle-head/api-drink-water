@@ -20,11 +20,11 @@ public class ProblemDetailResponse {
     private String detail;
     private Date timestamp;
     private String userMessage;
-    private List<Field> fields;
+    private List<Constraint> constraints;
 
     @Getter
     @Builder
-    public static class Field {
+    public static class Constraint {
         private String name;
         private String userMessage;
     }
