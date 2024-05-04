@@ -4,7 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -20,10 +21,10 @@ public class AlarmSettings {
     private int intervalMinutes;
 
     @Column(name = "start_time", nullable = false)
-    private Date startTime;
+    private OffsetDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    private Date endTime;
+    private OffsetDateTime endTime;
 
     @Override
     public String toString() {

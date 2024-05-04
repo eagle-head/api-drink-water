@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -20,7 +21,7 @@ public class WaterIntake {
 
     @EqualsAndHashCode.Include
     @Column(name = "date_time_utc", unique = true, nullable = false)
-    private Date dateTimeUTC;
+    private OffsetDateTime dateTimeUTC;
 
     @Column(nullable = false)
     private double volume;

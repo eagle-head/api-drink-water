@@ -4,17 +4,17 @@ import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class UserMixIn {
 
     @JsonIgnore
-    private Date createdAt;
+    private OffsetDateTime createdAt;
 
     @JsonIgnore
-    private Date updatedAt;
+    private OffsetDateTime updatedAt;
 
     @JsonIgnore
     private AlarmSettings alarmSettings;

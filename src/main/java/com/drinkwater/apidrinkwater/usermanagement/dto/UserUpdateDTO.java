@@ -5,7 +5,8 @@ import com.drinkwater.apidrinkwater.usermanagement.model.HeightUnit;
 import com.drinkwater.apidrinkwater.usermanagement.model.WeightUnit;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import java.util.Date;
+
+import java.time.OffsetDateTime;
 
 @Data
 public class UserUpdateDTO {
@@ -23,7 +24,7 @@ public class UserUpdateDTO {
     private String lastName;
 
     @Past(message = "Birth date must be in the past")
-    private Date birthDate;
+    private OffsetDateTime birthDate;
 
     private BiologicalSex biologicalSex;
 

@@ -5,7 +5,7 @@ import com.drinkwater.apidrinkwater.usermanagement.model.HeightUnit;
 import com.drinkwater.apidrinkwater.usermanagement.model.WeightUnit;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Data
 public class UserResponseDTO {
@@ -14,7 +14,7 @@ public class UserResponseDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private Date birthDate;
+    private OffsetDateTime birthDate;
     private BiologicalSex biologicalSex;
     private double weight;
     private WeightUnit weightUnit;

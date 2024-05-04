@@ -25,6 +25,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -91,14 +94,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (body == null) {
             body = ProblemDetailResponse.builder()
-                .timestamp(new Date())
+                .timestamp(OffsetDateTime.now(ZoneOffset.UTC))
                 .status(statusCode.value())
                 .detail(reasonPhrase)
                 .userMessage(UNEXPECTED_INTERNAL_ERROR)
                 .build();
         } else if (body instanceof String) {
             body = ProblemDetailResponse.builder()
-                .timestamp(new Date())
+                .timestamp(OffsetDateTime.now(ZoneOffset.UTC))
                 .status(statusCode.value())
                 .detail((String) body)
                 .userMessage(UNEXPECTED_INTERNAL_ERROR)
@@ -266,7 +269,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             .type(URI.create(type.getUri()))
             .title(type.getTitle())
             .detail(detail)
-            .timestamp(new Date());
+            .timestamp(OffsetDateTime.now(ZoneOffset.UTC));
     }
 
     private String joinPath(List<Reference> references) {

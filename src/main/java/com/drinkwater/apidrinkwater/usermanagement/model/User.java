@@ -9,8 +9,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -38,7 +38,7 @@ public class User {
     private String lastName;
 
     @Column(name = "birth_date", nullable = false)
-    private Date birthDate;
+    private OffsetDateTime birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "biological_sex", nullable = false)
@@ -56,11 +56,11 @@ public class User {
 
     @CreationTimestamp
     @Column(nullable = false)
-    private Date createdAt;
+    private OffsetDateTime createdAt;
 
     @UpdateTimestamp
     @Column(nullable = false)
-    private Date updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "height_unit", nullable = false)

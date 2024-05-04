@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Data
 public class UserCreateDTO {
@@ -30,7 +30,7 @@ public class UserCreateDTO {
 
     @NotNull
     @Past
-    private Date birthDate;
+    private OffsetDateTime birthDate;
 
     @NotNull
     private BiologicalSex biologicalSex;

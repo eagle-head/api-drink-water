@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.net.URI;
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @JsonInclude(Include.NON_NULL)
@@ -18,7 +18,7 @@ public class ProblemDetailResponse {
     private URI type;
     private String title;
     private String detail;
-    private Date timestamp;
+    private OffsetDateTime timestamp;
     private String userMessage;
     private List<Constraint> constraints;
 
