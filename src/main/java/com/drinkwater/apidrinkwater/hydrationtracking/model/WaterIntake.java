@@ -1,7 +1,6 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.model;
 
 import com.drinkwater.apidrinkwater.usermanagement.model.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,7 +31,6 @@ public class WaterIntake {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
     private User user;
 
     @Override
