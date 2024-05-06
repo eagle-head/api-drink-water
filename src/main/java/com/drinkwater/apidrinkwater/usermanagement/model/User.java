@@ -2,6 +2,7 @@ package com.drinkwater.apidrinkwater.usermanagement.model;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -54,10 +55,12 @@ public class User {
     @Column(nullable = false)
     private double height;
 
+    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false)
     private OffsetDateTime createdAt;
 
+    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
@@ -66,10 +69,12 @@ public class User {
     @Column(name = "height_unit", nullable = false)
     private HeightUnit heightUnit;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "alarm_settings_id", referencedColumnName = "id", nullable = false)
     private AlarmSettings alarmSettings;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WaterIntake> waterIntakes = new ArrayList<>();
 
