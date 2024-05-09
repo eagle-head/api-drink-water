@@ -14,9 +14,9 @@ public class AlarmSettingsCreateDTO {
     @Min(15)
     private int intervalMinutes;
 
-    @NotNull(message = "Start time is required")
+    @NotNull
     private OffsetDateTime startTime;
 
-    @NotNull(message = "End time is required")
+    @NotNull
     private OffsetDateTime endTime;
 }

@@ -14,26 +14,26 @@ public class UserUpdateDTO {
     @Email
     private String email;
 
-    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+    @Size(min = 6, max = 20)
     private String password;
 
-    @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
+    @Size(min = 1, max = 50)
     private String firstName;
 
-    @Size(min = 1, max = 50, message = "Last name must be between 1 and 50 characters")
+    @Size(min = 1, max = 50)
     private String lastName;
 
-    @Past(message = "Birth date must be in the past")
+    @Past
     private OffsetDateTime birthDate;
 
     private BiologicalSex biologicalSex;
 
-    @Min(value = 45, message = "Weight must be at least 45")
+    @Min(value = 45)
     private Double weight;
 
     private WeightUnit weightUnit;
 
-    @Min(value = 100, message = "Height must be at least 100")
+    @Min(value = 100)
     private Double height;
 
     private HeightUnit heightUnit;
