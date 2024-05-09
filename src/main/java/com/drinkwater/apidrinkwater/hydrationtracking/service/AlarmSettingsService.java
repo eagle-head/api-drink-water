@@ -1,22 +1,23 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.service;
 
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.mapper.AlarmSettingsMapper;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
 import com.drinkwater.apidrinkwater.hydrationtracking.repository.AlarmSettingsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.Map;
 
 @Service
 public class AlarmSettingsService {
 
     private final AlarmSettingsRepository alarmSettingsRepository;
+    private final AlarmSettingsMapper alarmSettingsMapper;
 
-    public AlarmSettingsService(AlarmSettingsRepository alarmSettingsRepository) {
+    public AlarmSettingsService(AlarmSettingsRepository alarmSettingsRepository, AlarmSettingsMapper alarmSettingsMapper) {
         this.alarmSettingsRepository = alarmSettingsRepository;
+        this.alarmSettingsMapper = alarmSettingsMapper;
     }
 
     @Transactional(readOnly = true)
@@ -26,17 +27,11 @@ public class AlarmSettingsService {
     }
 
     @Transactional
-    public AlarmSettings update(Long id, Map<String, Object> fields) {
+    public AlarmSettings update(Long id, AlarmSettingsDTO dto) {
         AlarmSettings existingAlarmSettings = this.findById(id);
+        AlarmSettings updatedAlarmSettings = alarmSettingsMapper.toEntity(dto);
+        updatedAlarmSettings.setId(existingAlarmSettings.getId());
 
-        fields.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(AlarmSettings.class, key);
-            if (field != null) {
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, existingAlarmSettings, value);
-            }
-        });
-
-        return this.alarmSettingsRepository.save(existingAlarmSettings);
+        return this.alarmSettingsRepository.save(updatedAlarmSettings);
     }
 }

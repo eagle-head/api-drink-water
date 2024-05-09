@@ -1,11 +1,12 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.controller;
 
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.AlarmSettingsService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/alarm-settings")
@@ -24,9 +25,9 @@ public class AlarmSettingsController {
         return ResponseEntity.ok(alarmSettings);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<AlarmSettings> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        AlarmSettings alarmSettings = this.alarmSettingsService.update(id, fields);
+    @PutMapping("/{id}")
+    public ResponseEntity<AlarmSettings> update(@PathVariable Long id, @Valid @RequestBody AlarmSettingsDTO dto) {
+        AlarmSettings alarmSettings = this.alarmSettingsService.update(id, dto);
 
         return ResponseEntity.ok(alarmSettings);
     }
