@@ -52,8 +52,15 @@ public class WaterIntakeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        String message = this.waterIntakeService.delete(id);
+        this.waterIntakeService.delete(id);
 
-        return ResponseEntity.ok(message);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<String> deleteAllWaterIntakesByUserId(@PathVariable Long userId) {
+        this.waterIntakeService.deleteAllWaterIntakesByUserId(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

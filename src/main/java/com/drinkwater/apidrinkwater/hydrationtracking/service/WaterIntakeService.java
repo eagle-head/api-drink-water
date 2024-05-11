@@ -12,11 +12,8 @@ import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class WaterIntakeService {
@@ -68,16 +65,16 @@ public class WaterIntakeService {
     }
 
     @Transactional
-    public String delete(Long id) {
+    public void delete(Long id) {
         this.findById(id);
 
         this.waterIntakeRepository.deleteById(id);
-
-        return "Water intake successfully deleted.";
     }
 
     @Transactional
     public void deleteAllWaterIntakesByUserId(Long userId) {
+        this.userService.findOneById(userId);
+
         this.waterIntakeRepository.deleteAllByUserId(userId);
     }
 }
