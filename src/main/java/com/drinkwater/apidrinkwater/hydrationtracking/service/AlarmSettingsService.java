@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmSettingsService {
 
     private final AlarmSettingsRepository alarmSettingsRepository;
-    private final AlarmSettingsMapper alarmSettingsMapper;
+    private final AlarmSettingsMapper mapper;
 
-    public AlarmSettingsService(AlarmSettingsRepository alarmSettingsRepository, AlarmSettingsMapper alarmSettingsMapper) {
+    public AlarmSettingsService(AlarmSettingsRepository alarmSettingsRepository, AlarmSettingsMapper mapper) {
         this.alarmSettingsRepository = alarmSettingsRepository;
-        this.alarmSettingsMapper = alarmSettingsMapper;
+        this.mapper = mapper;
     }
 
     @Transactional(readOnly = true)
@@ -29,7 +29,7 @@ public class AlarmSettingsService {
     @Transactional
     public AlarmSettings update(Long id, AlarmSettingsDTO dto) {
         AlarmSettings existingAlarmSettings = this.findById(id);
-        AlarmSettings updatedAlarmSettings = alarmSettingsMapper.toEntity(dto);
+        AlarmSettings updatedAlarmSettings = this.mapper.toEntity(dto);
         updatedAlarmSettings.setId(existingAlarmSettings.getId());
 
         return this.alarmSettingsRepository.save(updatedAlarmSettings);

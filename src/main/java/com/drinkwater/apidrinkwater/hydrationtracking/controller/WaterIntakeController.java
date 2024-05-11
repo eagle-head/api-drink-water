@@ -2,6 +2,7 @@ package com.drinkwater.apidrinkwater.hydrationtracking.controller;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeCreateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeResponseDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeUpdateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import jakarta.validation.Valid;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/water-intake")
@@ -43,9 +43,9 @@ public class WaterIntakeController {
         return ResponseEntity.ok(waterIntakes);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<WaterIntake> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        WaterIntake waterIntake = this.waterIntakeService.update(id, fields);
+    @PutMapping("/{id}")
+    public ResponseEntity<WaterIntakeResponseDTO> update(@PathVariable Long id, @Valid @RequestBody WaterIntakeUpdateDTO dto) {
+        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.update(id, dto);
 
         return ResponseEntity.ok(waterIntake);
     }

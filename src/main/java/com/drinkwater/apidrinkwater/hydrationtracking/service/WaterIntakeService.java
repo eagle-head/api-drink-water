@@ -2,6 +2,7 @@ package com.drinkwater.apidrinkwater.hydrationtracking.service;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeCreateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeResponseDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeUpdateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.exception.DuplicateDateTimeException;
 import com.drinkwater.apidrinkwater.hydrationtracking.mapper.WaterIntakeMapper;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
@@ -58,18 +59,12 @@ public class WaterIntakeService {
     }
 
     @Transactional
-    public WaterIntake update(Long id, Map<String, Object> fields) {
+    public WaterIntakeResponseDTO update(Long id, WaterIntakeUpdateDTO dto) {
         WaterIntake existingWaterIntake = this.findById(id);
+        WaterIntake updatedWaterIntake = this.mapper.toEntity(dto, existingWaterIntake);
+        WaterIntake saved = this.waterIntakeRepository.save(updatedWaterIntake);
 
-        fields.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(WaterIntake.class, key);
-            if (field != null) {
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, existingWaterIntake, value);
-            }
-        });
-
-        return this.waterIntakeRepository.save(existingWaterIntake);
+        return this.mapper.toDto(saved);
     }
 
     @Transactional
