@@ -5,6 +5,7 @@ import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+
 @Mapper(componentModel = "spring")
 public interface AlarmSettingsMapper {
 

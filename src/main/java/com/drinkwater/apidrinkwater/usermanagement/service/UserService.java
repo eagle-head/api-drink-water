@@ -69,4 +69,10 @@ public class UserService {
 
         this.userRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public User findOneById(Long id) {
+        return this.userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id + "."));
+    }
 }

@@ -1,5 +1,6 @@
 package com.drinkwater.apidrinkwater.exception;
 
+import com.drinkwater.apidrinkwater.hydrationtracking.exception.DuplicateDateTimeException;
 import com.drinkwater.apidrinkwater.usermanagement.exception.EmailAlreadyUsedException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -26,9 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.net.URI;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -59,6 +58,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyUsedException.class)
     protected ResponseEntity<Object> handleEmailAlreadyUsed(EmailAlreadyUsedException exception, WebRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String detail = exception.getMessage();
+        ProblemDetailResponseType type = ProblemDetailResponseType.CONFLICT;
+        ProblemDetailResponse responseBody = createProblemDetailResponseBuilder(status, type, detail)
+            .userMessage(detail)
+            .build();
+
+        return this.handleExceptionInternal(exception, responseBody, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(DuplicateDateTimeException.class)
+    protected ResponseEntity<Object> handleDuplicateDateTime(DuplicateDateTimeException exception, WebRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
         String detail = exception.getMessage();
         ProblemDetailResponseType type = ProblemDetailResponseType.CONFLICT;
