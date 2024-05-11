@@ -15,7 +15,6 @@ public class WaterIntakeCreateDTO {
     @Positive(message = "Volume must be a positive number.")
     private int volume;
 
-    @NotNull(message = "Date and time of intake is required.")
     @PastOrPresent(message = "Date and time of intake must be in the past or present.")
     private OffsetDateTime dateTimeUTC;
 
