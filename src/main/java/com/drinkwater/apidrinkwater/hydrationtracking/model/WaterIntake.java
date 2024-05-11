@@ -25,7 +25,7 @@ public class WaterIntake {
     private OffsetDateTime dateTimeUTC;
 
     @Column(nullable = false)
-    private double volume;
+    private int volume;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "volume_unit", nullable = false)

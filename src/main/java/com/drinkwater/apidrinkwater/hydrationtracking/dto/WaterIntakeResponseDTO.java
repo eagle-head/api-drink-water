@@ -10,7 +10,7 @@ public class WaterIntakeResponseDTO {
 
     private Long id;
     private OffsetDateTime dateTimeUTC;
-    private double volume;
+    private int volume;
     private VolumeUnit volumeUnit;
     private Long userId;
 }

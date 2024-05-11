@@ -49,7 +49,7 @@ public class WaterIntakeService {
     @Transactional(readOnly = true)
     public WaterIntake findById(Long id) {
         return this.waterIntakeRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found."));
+            .orElseThrow(() -> new EntityNotFoundException("Water Intake record not found."));
     }
 
     @Transactional(readOnly = true)
