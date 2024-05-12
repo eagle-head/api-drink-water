@@ -30,15 +30,15 @@ public class WaterIntakeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WaterIntake> findById(@PathVariable Long id) {
-        WaterIntake waterIntake = this.waterIntakeService.findById(id);
+    public ResponseEntity<WaterIntakeResponseDTO> findById(@PathVariable Long id) {
+        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.findById(id);
 
         return ResponseEntity.ok(waterIntake);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<WaterIntake>> findAllByUserId(@PathVariable Long userId) {
-        List<WaterIntake> waterIntakes = this.waterIntakeService.findAllByUserId(userId);
+    public ResponseEntity<List<WaterIntakeResponseDTO>> findAllByUserId(@PathVariable Long userId) {
+        List<WaterIntakeResponseDTO> waterIntakes = this.waterIntakeService.findAllByUserId(userId);
 
         return ResponseEntity.ok(waterIntakes);
     }
@@ -51,14 +51,14 @@ public class WaterIntakeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         this.waterIntakeService.delete(id);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/user/{userId}")
-    public ResponseEntity<String> deleteAllWaterIntakesByUserId(@PathVariable Long userId) {
+    public ResponseEntity<Object> deleteAllWaterIntakesByUserId(@PathVariable Long userId) {
         this.waterIntakeService.deleteAllWaterIntakesByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK).build();

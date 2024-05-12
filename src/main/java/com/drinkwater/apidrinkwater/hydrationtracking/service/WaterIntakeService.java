@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WaterIntakeService {
@@ -45,19 +46,23 @@ public class WaterIntakeService {
     }
 
     @Transactional(readOnly = true)
-    public WaterIntake findById(Long id) {
-        return this.waterIntakeRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Water Intake record not found."));
+    public WaterIntakeResponseDTO findById(Long id) {
+        WaterIntake waterIntake = this.findWaterIntakeById(id);
+
+        return this.mapper.toDto(waterIntake);
     }
 
     @Transactional(readOnly = true)
-    public List<WaterIntake> findAllByUserId(Long userId) {
-        return this.waterIntakeRepository.findAllByUserId(userId);
+    public List<WaterIntakeResponseDTO> findAllByUserId(Long userId) {
+        return this.waterIntakeRepository.findAllByUserId(userId)
+            .stream()
+            .map(mapper::toDto)
+            .collect(Collectors.toList());
     }
 
     @Transactional
     public WaterIntakeResponseDTO update(Long id, WaterIntakeUpdateDTO dto) {
-        WaterIntake existingWaterIntake = this.findById(id);
+        WaterIntake existingWaterIntake = this.findWaterIntakeById(id);
         WaterIntake updatedWaterIntake = this.mapper.toEntity(dto, existingWaterIntake);
         WaterIntake saved = this.waterIntakeRepository.save(updatedWaterIntake);
 
@@ -66,7 +71,7 @@ public class WaterIntakeService {
 
     @Transactional
     public void delete(Long id) {
-        this.findById(id);
+        this.findWaterIntakeById(id);
 
         this.waterIntakeRepository.deleteById(id);
     }
@@ -76,5 +81,10 @@ public class WaterIntakeService {
         this.userService.findUserById(userId);
 
         this.waterIntakeRepository.deleteAllByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public WaterIntake findWaterIntakeById(Long id) {
+        return this.waterIntakeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Water Intake record not found."));
     }
 }
