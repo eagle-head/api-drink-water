@@ -1,6 +1,6 @@
 package com.drinkwater.apidrinkwater.validation;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsBaseDTO;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -8,12 +8,12 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
-public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstraint, AlarmSettingsDTO> {
+public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstraint, AlarmSettingsBaseDTO> {
 
     private static final long FIFTEEN_MINUTES = 15;
 
     @Override
-    public boolean isValid(AlarmSettingsDTO dto, ConstraintValidatorContext context) {
+    public boolean isValid(AlarmSettingsBaseDTO dto, ConstraintValidatorContext context) {
         if (dto.getStartTime() == null || dto.getEndTime() == null) {
             return true;
         }

@@ -1,7 +1,7 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.controller;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsDTO;
-import com.drinkwater.apidrinkwater.hydrationtracking.model.AlarmSettings;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsResponseDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsUpdateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.AlarmSettingsService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +19,15 @@ public class AlarmSettingsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlarmSettings> findById(@PathVariable Long id) {
-        AlarmSettings alarmSettings = this.alarmSettingsService.findById(id);
+    public ResponseEntity<AlarmSettingsResponseDTO> findById(@PathVariable Long id) {
+        AlarmSettingsResponseDTO alarmSettings = this.alarmSettingsService.findById(id);
 
         return ResponseEntity.ok(alarmSettings);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AlarmSettings> update(@PathVariable Long id, @Valid @RequestBody AlarmSettingsDTO dto) {
-        AlarmSettings alarmSettings = this.alarmSettingsService.update(id, dto);
+    public ResponseEntity<AlarmSettingsResponseDTO> update(@PathVariable Long id, @Valid @RequestBody AlarmSettingsUpdateDTO dto) {
+        AlarmSettingsResponseDTO alarmSettings = this.alarmSettingsService.update(id, dto);
 
         return ResponseEntity.ok(alarmSettings);
     }

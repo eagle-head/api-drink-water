@@ -39,16 +39,15 @@ public class UserService {
     // Read method
     @Transactional(readOnly = true)
     public UserResponseDTO findById(Long id) {
-        return this.userRepository.findById(id)
-            .map(mapper::toDto)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id + "."));
+        User user = this.findUserById(id);
+
+        return this.mapper.toDto(user);
     }
 
     // Update method
     @Transactional
     public UserResponseDTO update(Long id, UserUpdateDTO updateDTO) {
-        User existingUser = this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Unable to update user: No user found with ID " + id + "."));
+        User existingUser = this.findUserById(id);
 
         if (updateDTO.getEmail() != null && this.userRepository.existsByEmailAndIdNot(updateDTO.getEmail(), id)) {
             throw new EmailAlreadyUsedException("The email provided is already in use.");
@@ -64,14 +63,13 @@ public class UserService {
     // Delete method
     @Transactional
     public void delete(Long id) {
-        this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Deletion failed: No user found with ID " + id + "."));
+        this.findUserById(id);
 
         this.userRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
-    public User findOneById(Long id) {
+    public User findUserById(Long id) {
         return this.userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id + "."));
     }

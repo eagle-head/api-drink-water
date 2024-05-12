@@ -30,7 +30,7 @@ public class WaterIntakeService {
 
     @Transactional
     public WaterIntakeResponseDTO create(Long userId, WaterIntakeCreateDTO dto) throws DuplicateDateTimeException {
-        User user = this.userService.findOneById(userId);
+        User user = this.userService.findUserById(userId);
 
         if (this.waterIntakeRepository.existsByDateTimeUTCAndUserId(dto.getDateTimeUTC(), userId)) {
             throw new DuplicateDateTimeException("A water intake record already exists for the specified date and time for this user.");
@@ -73,7 +73,7 @@ public class WaterIntakeService {
 
     @Transactional
     public void deleteAllWaterIntakesByUserId(Long userId) {
-        this.userService.findOneById(userId);
+        this.userService.findUserById(userId);
 
         this.waterIntakeRepository.deleteAllByUserId(userId);
     }

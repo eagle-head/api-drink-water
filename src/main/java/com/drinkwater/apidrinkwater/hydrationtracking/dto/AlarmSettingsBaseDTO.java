@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 
 @TimeRangeConstraint
 @Data
-public class AlarmSettingsDTO {
+public class AlarmSettingsBaseDTO {
 
     @Min(15)
     private int intervalMinutes;

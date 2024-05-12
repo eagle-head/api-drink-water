@@ -1,6 +1,6 @@
 package com.drinkwater.apidrinkwater.usermanagement.dto;
 
-import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.AlarmSettingsCreateDTO;
 import com.drinkwater.apidrinkwater.usermanagement.model.BiologicalSex;
 import com.drinkwater.apidrinkwater.usermanagement.model.HeightUnit;
 import com.drinkwater.apidrinkwater.usermanagement.model.WeightUnit;
@@ -49,5 +49,5 @@ public class UserCreateDTO {
 
     @NotNull
     @Valid
-    private AlarmSettingsDTO alarmSettings;
+    private AlarmSettingsCreateDTO alarmSettings;
 }
