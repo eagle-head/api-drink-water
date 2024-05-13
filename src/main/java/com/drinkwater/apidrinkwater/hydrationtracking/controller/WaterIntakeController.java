@@ -3,7 +3,6 @@ package com.drinkwater.apidrinkwater.hydrationtracking.controller;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeCreateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeResponseDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeUpdateDTO;
-import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

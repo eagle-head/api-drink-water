@@ -9,15 +9,16 @@ import java.time.OffsetDateTime;
 @Data
 public class WaterIntakeCreateDTO {
 
-    @NotNull(message = "User ID is required.")
+    @NotNull
     private Long userId;
 
-    @Positive(message = "Volume must be a positive number.")
+    @Positive
     private int volume;
 
-    @PastOrPresent(message = "Date and time of intake must be in the past or present.")
+    @NotNull
+    @PastOrPresent
     private OffsetDateTime dateTimeUTC;
 
-    @NotNull(message = "Volume unit is required.")
+    @NotNull
     private VolumeUnit volumeUnit;
 }
