@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/alarm-settings")
+@RequestMapping("/users/{userId}/alarm-settings")
 public class AlarmSettingsController {
 
     private final AlarmSettingsService alarmSettingsService;
@@ -19,15 +19,16 @@ public class AlarmSettingsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlarmSettingsResponseDTO> findById(@PathVariable Long id) {
-        AlarmSettingsResponseDTO alarmSettings = this.alarmSettingsService.findById(id);
+    public ResponseEntity<AlarmSettingsResponseDTO> findById(@PathVariable Long userId, @PathVariable Long id) {
+        AlarmSettingsResponseDTO alarmSettings = this.alarmSettingsService.findById(userId, id);
 
         return ResponseEntity.ok(alarmSettings);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AlarmSettingsResponseDTO> update(@PathVariable Long id, @Valid @RequestBody AlarmSettingsUpdateDTO dto) {
-        AlarmSettingsResponseDTO alarmSettings = this.alarmSettingsService.update(id, dto);
+    public ResponseEntity<AlarmSettingsResponseDTO> update(@PathVariable Long userId, @PathVariable Long id,
+                                                           @Valid @RequestBody AlarmSettingsUpdateDTO dto) {
+        AlarmSettingsResponseDTO alarmSettings = this.alarmSettingsService.update(userId, id, dto);
 
         return ResponseEntity.ok(alarmSettings);
     }

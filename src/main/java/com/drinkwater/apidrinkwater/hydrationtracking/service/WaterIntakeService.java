@@ -46,7 +46,8 @@ public class WaterIntakeService {
     }
 
     @Transactional(readOnly = true)
-    public WaterIntakeResponseDTO findById(Long id) {
+    public WaterIntakeResponseDTO findById(Long userId, Long id) {
+        this.userService.findUserById(userId);
         WaterIntake waterIntake = this.findWaterIntakeById(id);
 
         return this.mapper.toDto(waterIntake);
@@ -70,7 +71,8 @@ public class WaterIntakeService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long userId, Long id) {
+        this.userService.findUserById(userId);
         this.findWaterIntakeById(id);
 
         this.waterIntakeRepository.deleteById(id);

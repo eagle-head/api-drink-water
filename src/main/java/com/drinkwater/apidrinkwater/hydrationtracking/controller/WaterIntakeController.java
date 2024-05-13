@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/water-intake")
+@RequestMapping("/users/{userId}/water-intakes")
 public class WaterIntakeController {
 
     private final WaterIntakeService waterIntakeService;
@@ -21,21 +21,22 @@ public class WaterIntakeController {
         this.waterIntakeService = waterIntakeService;
     }
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<WaterIntakeResponseDTO> create(@PathVariable Long userId, @Valid @RequestBody WaterIntakeCreateDTO dto) {
+    @PostMapping
+    public ResponseEntity<WaterIntakeResponseDTO> create(@PathVariable Long userId,
+                                                         @Valid @RequestBody WaterIntakeCreateDTO dto) {
         WaterIntakeResponseDTO newWaterIntake = this.waterIntakeService.create(userId, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newWaterIntake);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WaterIntakeResponseDTO> findById(@PathVariable Long id) {
-        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.findById(id);
+    public ResponseEntity<WaterIntakeResponseDTO> findById(@PathVariable Long id, @PathVariable Long userId) {
+        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.findById(userId, id);
 
         return ResponseEntity.ok(waterIntake);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping
     public ResponseEntity<List<WaterIntakeResponseDTO>> findAllByUserId(@PathVariable Long userId) {
         List<WaterIntakeResponseDTO> waterIntakes = this.waterIntakeService.findAllByUserId(userId);
 
@@ -43,23 +44,24 @@ public class WaterIntakeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WaterIntakeResponseDTO> update(@PathVariable Long id, @Valid @RequestBody WaterIntakeUpdateDTO dto) {
+    public ResponseEntity<WaterIntakeResponseDTO> update(@PathVariable Long id,
+                                                         @Valid @RequestBody WaterIntakeUpdateDTO dto) {
         WaterIntakeResponseDTO waterIntake = this.waterIntakeService.update(id, dto);
 
         return ResponseEntity.ok(waterIntake);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
-        this.waterIntakeService.delete(id);
+    public ResponseEntity<Object> delete(@PathVariable Long userId, @PathVariable Long id) {
+        this.waterIntakeService.delete(userId, id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping
     public ResponseEntity<Object> deleteAllWaterIntakesByUserId(@PathVariable Long userId) {
         this.waterIntakeService.deleteAllWaterIntakesByUserId(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.noContent().build();
     }
 }
