@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
 
 @RestController
-@RequestMapping("/me")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
