@@ -52,14 +52,14 @@ public class WaterIntakeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long userId, @PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long userId, @PathVariable Long id) {
         this.waterIntakeService.delete(userId, id);
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> deleteAllWaterIntakesByUserId(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteAllWaterIntakesByUserId(@PathVariable Long userId) {
         this.waterIntakeService.deleteAllWaterIntakesByUserId(userId);
 
         return ResponseEntity.noContent().build();
