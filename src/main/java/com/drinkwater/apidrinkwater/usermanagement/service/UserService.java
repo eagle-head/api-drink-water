@@ -15,6 +15,9 @@ import com.drinkwater.apidrinkwater.usermanagement.repository.UserRepository;
 @Service
 public class UserService {
 
+    private final static String USER_NOT_FOUND_MESSAGE = "User not found with ID: ";
+    private final static String EMAIL_ALREADY_USED_MESSAGE = "The email provided is already in use.";
+
     private final UserRepository userRepository;
     private final UserMapper mapper;
 
@@ -27,7 +30,7 @@ public class UserService {
     @Transactional
     public UserResponseDTO save(UserCreateDTO dto) {
         if (this.userRepository.existsByEmail(dto.getEmail())) {
-            throw new EmailAlreadyUsedException("The email provided is already in use.");
+            throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED_MESSAGE);
         }
 
         User newUser = this.mapper.toEntity(dto);
@@ -50,7 +53,7 @@ public class UserService {
         User existingUser = this.findUserById(id);
 
         if (updateDTO.getEmail() != null && this.userRepository.existsByEmailAndIdNot(updateDTO.getEmail(), id)) {
-            throw new EmailAlreadyUsedException("The email provided is already in use.");
+            throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED_MESSAGE);
         }
 
         this.mapper.toEntity(updateDTO, existingUser);
@@ -63,7 +66,7 @@ public class UserService {
     // Delete method
     @Transactional
     public void delete(Long id) {
-        this.findUserById(id);
+        this.existsById(id);
 
         this.userRepository.deleteById(id);
     }
@@ -71,6 +74,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return this.userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id + "."));
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE + id + "."));
+    }
+
+    @Transactional(readOnly = true)
+    public void existsById(Long id) {
+        boolean userExists = this.userRepository.existsById(id);
+
+        if (!userExists) {
+            throw new EntityNotFoundException(USER_NOT_FOUND_MESSAGE + id + ".");
+        }
     }
 }

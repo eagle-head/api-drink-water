@@ -18,7 +18,8 @@ public class AlarmSettingsService {
     private final AlarmSettingsMapper mapper;
     private final UserService userService;
 
-    public AlarmSettingsService(AlarmSettingsRepository alarmSettingsRepository, AlarmSettingsMapper mapper, UserService userService) {
+    public AlarmSettingsService(AlarmSettingsRepository alarmSettingsRepository, AlarmSettingsMapper mapper,
+                                UserService userService) {
         this.alarmSettingsRepository = alarmSettingsRepository;
         this.mapper = mapper;
         this.userService = userService;
@@ -26,15 +27,15 @@ public class AlarmSettingsService {
 
     @Transactional(readOnly = true)
     public AlarmSettingsResponseDTO findById(Long userId, Long id) {
-        this.userService.findUserById(userId);
+        this.userService.existsById(userId);
         AlarmSettings alarmSettings = this.findAlarmSettingsById(id);
 
-        return mapper.toDto(alarmSettings);
+        return this.mapper.toDto(alarmSettings);
     }
 
     @Transactional
     public AlarmSettingsResponseDTO update(Long userId, Long id, AlarmSettingsUpdateDTO dto) {
-        this.userService.findUserById(userId);
+        this.userService.existsById(userId);
         AlarmSettings existingAlarmSettings = this.findAlarmSettingsById(id);
         AlarmSettings updatedAlarmSettings = this.mapper.toEntity(dto);
         updatedAlarmSettings.setId(existingAlarmSettings.getId());
@@ -44,7 +45,7 @@ public class AlarmSettingsService {
     }
 
     private AlarmSettings findAlarmSettingsById(Long id) {
-        return alarmSettingsRepository.findById(id)
+        return this.alarmSettingsRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("AlarmSettings not found."));
     }
 }

@@ -23,18 +23,20 @@ public class WaterIntakeService {
     private final UserService userService;
     private final WaterIntakeMapper mapper;
 
-    public WaterIntakeService(WaterIntakeRepository waterIntakeRepository, UserService userService, WaterIntakeMapper mapper) {
+    public WaterIntakeService(WaterIntakeRepository waterIntakeRepository, UserService userService,
+                              WaterIntakeMapper mapper) {
         this.waterIntakeRepository = waterIntakeRepository;
         this.userService = userService;
         this.mapper = mapper;
     }
 
     @Transactional
-    public WaterIntakeResponseDTO create(Long userId, WaterIntakeCreateDTO dto) throws DuplicateDateTimeException {
+    public WaterIntakeResponseDTO create(Long userId, WaterIntakeCreateDTO dto) {
         User user = this.userService.findUserById(userId);
 
         if (this.waterIntakeRepository.existsByDateTimeUTCAndUserId(dto.getDateTimeUTC(), userId)) {
-            throw new DuplicateDateTimeException("A water intake record already exists for the specified date and time for this user.");
+            throw new DuplicateDateTimeException("A water intake record already exists for the specified date"
+                + " and time for this user.");
         }
 
         WaterIntake newWaterIntake = new WaterIntake();
@@ -47,7 +49,7 @@ public class WaterIntakeService {
 
     @Transactional(readOnly = true)
     public WaterIntakeResponseDTO findById(Long userId, Long id) {
-        this.userService.findUserById(userId);
+        this.userService.existsById(userId);
         WaterIntake waterIntake = this.findWaterIntakeById(id);
 
         return this.mapper.toDto(waterIntake);
@@ -72,7 +74,7 @@ public class WaterIntakeService {
 
     @Transactional
     public void delete(Long userId, Long id) {
-        this.userService.findUserById(userId);
+        this.userService.existsById(userId);
         this.findWaterIntakeById(id);
 
         this.waterIntakeRepository.deleteById(id);
@@ -80,13 +82,14 @@ public class WaterIntakeService {
 
     @Transactional
     public void deleteAllWaterIntakesByUserId(Long userId) {
-        this.userService.findUserById(userId);
+        this.userService.existsById(userId);
 
         this.waterIntakeRepository.deleteAllByUserId(userId);
     }
 
     @Transactional(readOnly = true)
     public WaterIntake findWaterIntakeById(Long id) {
-        return this.waterIntakeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Water Intake record not found."));
+        return this.waterIntakeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Water Intake record not found."));
     }
 }
