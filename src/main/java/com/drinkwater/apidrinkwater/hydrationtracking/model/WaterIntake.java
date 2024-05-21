@@ -1,13 +1,16 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.model;
 
 import com.drinkwater.apidrinkwater.usermanagement.model.User;
+import com.drinkwater.apidrinkwater.util.UUIDConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
 
+import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -19,6 +22,10 @@ public class WaterIntake {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @EqualsAndHashCode.Include
+    @Column(name = "code", nullable = false, updatable = false, unique = true, columnDefinition = "BINARY(16)")
+    private byte[] code;
 
     @EqualsAndHashCode.Include
     @Column(name = "date_time_utc", unique = true, nullable = false)
@@ -35,6 +42,18 @@ public class WaterIntake {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public WaterIntake() {
+        this.code = UUIDConverter.toBytes(UUID.randomUUID());
+    }
+
+    public UUID getCode() {
+        return UUIDConverter.toUUID(this.code);
+    }
+
+    public void setCode(UUID code) {
+        this.code = UUIDConverter.toBytes(code);
+    }
 
     @Override
     public String toString() {

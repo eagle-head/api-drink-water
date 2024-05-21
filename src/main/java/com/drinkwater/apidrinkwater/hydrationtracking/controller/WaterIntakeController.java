@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users/{userId}/water-intakes")
@@ -29,9 +30,9 @@ public class WaterIntakeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newWaterIntake);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<WaterIntakeResponseDTO> findById(@PathVariable Long id, @PathVariable Long userId) {
-        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.findById(userId, id);
+    @GetMapping("/{code}")
+    public ResponseEntity<WaterIntakeResponseDTO> findByCode(@PathVariable UUID code, @PathVariable Long userId) {
+        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.findByCode(userId, code);
 
         return ResponseEntity.ok(waterIntake);
     }
@@ -43,17 +44,17 @@ public class WaterIntakeController {
         return ResponseEntity.ok(waterIntakes);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<WaterIntakeResponseDTO> update(@PathVariable Long id,
+    @PutMapping("/{code}")
+    public ResponseEntity<WaterIntakeResponseDTO> update(@PathVariable UUID code,
                                                          @Valid @RequestBody WaterIntakeUpdateDTO dto) {
-        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.update(id, dto);
+        WaterIntakeResponseDTO waterIntake = this.waterIntakeService.update(code, dto);
 
         return ResponseEntity.ok(waterIntake);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long userId, @PathVariable Long id) {
-        this.waterIntakeService.delete(userId, id);
+    @DeleteMapping("/{code}")
+    public ResponseEntity<Void> delete(@PathVariable Long userId, @PathVariable UUID code) {
+        this.waterIntakeService.delete(userId, code);
 
         return ResponseEntity.noContent().build();
     }

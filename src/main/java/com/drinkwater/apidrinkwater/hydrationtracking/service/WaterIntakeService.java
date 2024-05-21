@@ -9,11 +9,13 @@ import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
 import com.drinkwater.apidrinkwater.hydrationtracking.repository.WaterIntakeRepository;
 import com.drinkwater.apidrinkwater.usermanagement.model.User;
 import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
+import com.drinkwater.apidrinkwater.util.UUIDConverter;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,9 +50,9 @@ public class WaterIntakeService {
     }
 
     @Transactional(readOnly = true)
-    public WaterIntakeResponseDTO findById(Long userId, Long id) {
+    public WaterIntakeResponseDTO findByCode(Long userId, UUID code) {
         this.userService.existsById(userId);
-        WaterIntake waterIntake = this.findWaterIntakeById(id);
+        WaterIntake waterIntake = this.findWaterIntakeByCode(UUIDConverter.toBytes(code));
 
         return this.mapper.toDto(waterIntake);
     }
@@ -64,8 +66,8 @@ public class WaterIntakeService {
     }
 
     @Transactional
-    public WaterIntakeResponseDTO update(Long id, WaterIntakeUpdateDTO dto) {
-        WaterIntake existingWaterIntake = this.findWaterIntakeById(id);
+    public WaterIntakeResponseDTO update(UUID code, WaterIntakeUpdateDTO dto) {
+        WaterIntake existingWaterIntake = this.findWaterIntakeByCode(UUIDConverter.toBytes(code));
         WaterIntake updatedWaterIntake = this.mapper.toEntity(dto, existingWaterIntake);
         WaterIntake saved = this.waterIntakeRepository.save(updatedWaterIntake);
 
@@ -73,11 +75,11 @@ public class WaterIntakeService {
     }
 
     @Transactional
-    public void delete(Long userId, Long id) {
+    public void delete(Long userId, UUID code) {
         this.userService.existsById(userId);
-        this.findWaterIntakeById(id);
+        WaterIntake waterIntake = this.findWaterIntakeByCode(UUIDConverter.toBytes(code));
 
-        this.waterIntakeRepository.deleteById(id);
+        this.waterIntakeRepository.delete(waterIntake);
     }
 
     @Transactional
@@ -88,8 +90,8 @@ public class WaterIntakeService {
     }
 
     @Transactional(readOnly = true)
-    public WaterIntake findWaterIntakeById(Long id) {
-        return this.waterIntakeRepository.findById(id)
+    public WaterIntake findWaterIntakeByCode(byte[] code) {
+        return this.waterIntakeRepository.findByCode(code)
             .orElseThrow(() -> new EntityNotFoundException("Water Intake record not found."));
     }
 }

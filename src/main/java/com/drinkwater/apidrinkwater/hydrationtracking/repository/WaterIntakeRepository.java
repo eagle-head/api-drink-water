@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WaterIntakeRepository extends JpaRepository<WaterIntake, Long> {
@@ -15,4 +16,6 @@ public interface WaterIntakeRepository extends JpaRepository<WaterIntake, Long> 
     List<WaterIntake> findAllByUserId(Long userId);
 
     boolean existsByDateTimeUTCAndUserId(OffsetDateTime dateTimeUTC, Long userId);
+
+    Optional<WaterIntake> findByCode(byte[] code);
 }
