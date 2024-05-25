@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 
 import jakarta.persistence.*;
 
-import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 

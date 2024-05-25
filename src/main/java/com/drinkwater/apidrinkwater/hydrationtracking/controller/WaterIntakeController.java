@@ -1,15 +1,18 @@
 package com.drinkwater.apidrinkwater.hydrationtracking.controller;
 
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeCreateDTO;
+import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeFilterDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeResponseDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.dto.WaterIntakeUpdateDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.service.WaterIntakeService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,13 +40,6 @@ public class WaterIntakeController {
         return ResponseEntity.ok(waterIntake);
     }
 
-    @GetMapping
-    public ResponseEntity<List<WaterIntakeResponseDTO>> findAllByUserId(@PathVariable Long userId) {
-        List<WaterIntakeResponseDTO> waterIntakes = this.waterIntakeService.findAllByUserId(userId);
-
-        return ResponseEntity.ok(waterIntakes);
-    }
-
     @PutMapping("/{code}")
     public ResponseEntity<WaterIntakeResponseDTO> update(@PathVariable UUID code,
                                                          @Valid @RequestBody WaterIntakeUpdateDTO dto) {
@@ -64,5 +60,18 @@ public class WaterIntakeController {
         this.waterIntakeService.deleteAllWaterIntakesByUserId(userId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<WaterIntakeResponseDTO>> filterWaterIntakes(@PathVariable Long userId,
+                                                        WaterIntakeFilterDTO filterDTO,
+                                                        @RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WaterIntakeResponseDTO> filteredWaterIntakes = this.waterIntakeService.
+                                findFilteredWaterIntakes(userId, filterDTO, pageable);
+
+        return ResponseEntity.ok(filteredWaterIntakes);
     }
 }
