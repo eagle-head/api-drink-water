@@ -64,13 +64,11 @@ public class WaterIntakeController {
 
     @GetMapping("/filter")
     public ResponseEntity<Page<WaterIntakeResponseDTO>> filterWaterIntakes(@PathVariable Long userId,
-                                                        WaterIntakeFilterDTO filterDTO,
-                                                        @RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "10") int size) {
+                                                                           WaterIntakeFilterDTO filterDTO,
+                                                                           Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<WaterIntakeResponseDTO> filteredWaterIntakes = this.waterIntakeService.
-                                findFilteredWaterIntakes(userId, filterDTO, pageable);
+        Page<WaterIntakeResponseDTO> filteredWaterIntakes =
+            this.waterIntakeService.findFilteredWaterIntakes(userId, filterDTO, pageable);
 
         return ResponseEntity.ok(filteredWaterIntakes);
     }

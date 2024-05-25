@@ -11,6 +11,7 @@ import com.drinkwater.apidrinkwater.hydrationtracking.repository.WaterIntakeRepo
 import com.drinkwater.apidrinkwater.hydrationtracking.specification.WaterIntakeSpecification;
 import com.drinkwater.apidrinkwater.usermanagement.model.User;
 import com.drinkwater.apidrinkwater.usermanagement.service.UserService;
+import com.drinkwater.apidrinkwater.util.PageableTranslator;
 import com.drinkwater.apidrinkwater.util.UUIDConverter;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -92,12 +94,25 @@ public class WaterIntakeService {
 
     @Transactional(readOnly = true)
     public Page<WaterIntakeResponseDTO> findFilteredWaterIntakes(Long userId, WaterIntakeFilterDTO filterDTO,
-                                                                                        Pageable pageable) {
-
+                                                                 Pageable pageable) {
         User user = this.userService.findUserById(userId);
+
+        Pageable translatedPageable = translatePageable(pageable);
+
         Specification<WaterIntake> spec = WaterIntakeSpecification.getSpecifications(user, filterDTO);
-        Page<WaterIntake> page = this.waterIntakeRepository.findAll(spec, pageable);
+        Page<WaterIntake> page = this.waterIntakeRepository.findAll(spec, translatedPageable);
 
         return page.map(this.mapper::toDto);
+    }
+
+    private Pageable translatePageable(Pageable apiPageable) {
+        Map<String, String> mapping = Map.of(
+            "dateTimeUTC", "dateTimeUTC",
+            "volume", "volume",
+            "volumeUnit", "volumeUnit",
+            "userId", "user.id"
+        );
+
+        return PageableTranslator.translate(apiPageable, mapping);
     }
 }
