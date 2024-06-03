@@ -2,12 +2,13 @@ package com.drinkwater.apidrinkwater.reports.repository;
 
 import com.drinkwater.apidrinkwater.reports.dto.DailyWaterIntakeReportDTO;
 import com.drinkwater.apidrinkwater.hydrationtracking.model.WaterIntake;
-import com.drinkwater.apidrinkwater.reports.dto.DailyWaterIntakeRequestDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -18,27 +19,39 @@ public class ReportsRepositoryCustomImpl implements ReportsRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<DailyWaterIntakeReportDTO> findDailyReport(DailyWaterIntakeRequestDTO request) {
+    public List<DailyWaterIntakeReportDTO> findDailyReport(Long userId, OffsetDateTime date) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<DailyWaterIntakeReportDTO> query = builder.createQuery(DailyWaterIntakeReportDTO.class);
         Root<WaterIntake> root = query.from(WaterIntake.class);
 
-        Date date = Date.from(request.getDate().toInstant());
+        // Normalize the date to UTC (Offset +00:00)
+        OffsetDateTime normalizedDate = date.withOffsetSameInstant(ZoneOffset.UTC);
 
-        Expression<Date> functionDateTimeUTC = builder.function("date", Date.class, root.get("dateTimeUTC"));
+        // Extracting the date part using the date function (convert to UTC first)
+        Expression<Date> functionConvertTz = builder.function(
+            "convert_tz", Date.class, root.get("dateTimeUTC"),
+            builder.literal("+00:00"), builder.literal("+00:00"));
+        Expression<Date> functionDate = builder.function("date", Date.class, functionConvertTz);
 
+        // Converting normalized OffsetDateTime to Date to ensure correct comparison (date only)
+        Date dateOnly = Date.from(normalizedDate.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant());
+
+        // Creating the predicates for filtering
+        Predicate datePredicate = builder.equal(functionDate, dateOnly);
+        Predicate userPredicate = builder.equal(root.get("user").get("id"), userId);
+
+        // Building the selection part of the query
         CompoundSelection<DailyWaterIntakeReportDTO> selection = builder.construct(DailyWaterIntakeReportDTO.class,
-            functionDateTimeUTC,
+            functionDate,
             builder.count(root.get("id")),
             builder.sum(root.get("volume")));
 
-        Predicate datePredicate = builder.equal(functionDateTimeUTC, date);
-        Predicate userPredicate = builder.equal(root.get("user").get("id"), request.getUserId());
+        // Applying selection, where clause, and group by
+        query.select(selection)
+            .where(builder.and(datePredicate, userPredicate))
+            .groupBy(functionDate);
 
-        query.select(selection);
-        query.where(builder.and(datePredicate, userPredicate));
-        query.groupBy(functionDateTimeUTC);
-
+        // Executing the query
         return this.entityManager.createQuery(query).getResultList();
     }
 }

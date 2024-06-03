@@ -1,28 +1,28 @@
 package com.drinkwater.apidrinkwater.reports.controller;
 
 import com.drinkwater.apidrinkwater.reports.dto.DailyWaterIntakeReportDTO;
-import com.drinkwater.apidrinkwater.reports.dto.DailyWaterIntakeRequestDTO;
 import com.drinkwater.apidrinkwater.reports.service.ReportsService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("users/{userId}/reports")
 public class ReportsController {
 
     private final ReportsService reportsService;
 
-    @Autowired
     public ReportsController(ReportsService reportsService) {
         this.reportsService = reportsService;
     }
 
     @GetMapping("/daily")
-    public List<DailyWaterIntakeReportDTO> findDailyReport(@Valid @RequestBody DailyWaterIntakeRequestDTO request) {
-        // TODO: mudar nome do metodo
-        return this.reportsService.getDailyReport(request);
+    public List<DailyWaterIntakeReportDTO> findDailyReport(
+        @PathVariable Long userId,
+        @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime date) {
+
+        return this.reportsService.findDailyReport(userId, date);
     }
 }
