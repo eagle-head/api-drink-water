@@ -9,7 +9,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DailyWaterIntakeReportDTO {
+public class WaterIntakeReportDTO {
 
     private Date date;
     private long totalIntakes;
