@@ -7,7 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -19,23 +19,20 @@ public class ReportsRepositoryCustomImpl implements ReportsRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<WaterIntakeReportDTO> findReport(Long userId, OffsetDateTime startDate, OffsetDateTime endDate) {
+    public List<WaterIntakeReportDTO> findReport(Long userId, LocalDate startDate, LocalDate endDate) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<WaterIntakeReportDTO> query = builder.createQuery(WaterIntakeReportDTO.class);
         Root<WaterIntake> root = query.from(WaterIntake.class);
 
-        // Normalize the dates to UTC (Offset +00:00)
-        OffsetDateTime normalizedStartDate = startDate.withOffsetSameInstant(ZoneOffset.UTC);
-        OffsetDateTime normalizedEndDate = endDate.withOffsetSameInstant(ZoneOffset.UTC);
-
-        // Convert OffsetDateTime to Date for comparison
-        Date startDateOnly = Date.from(normalizedStartDate.toInstant());
-        Date endDateOnly = Date.from(normalizedEndDate.toInstant());
+        // Convert LocalDate to Date for comparison
+        Date startDateOnly = Date.from(startDate.atStartOfDay(ZoneOffset.UTC).toInstant());
+        Date endDateOnly = Date.from(endDate.atStartOfDay(ZoneOffset.UTC).toInstant());
 
         // Extracting the date part using the date function (convert to UTC first)
         Expression<Date> functionConvertTz = builder.function(
             "convert_tz", Date.class, root.get("dateTimeUTC"),
             builder.literal("+00:00"), builder.literal("+00:00"));
+
         Expression<Date> functionDate = builder.function("date", Date.class, functionConvertTz);
 
         // Creating the predicates for filtering

@@ -6,7 +6,7 @@ import com.drinkwater.apidrinkwater.reports.model.Granularity;
 import com.drinkwater.apidrinkwater.reports.strategy.AggregationStrategy;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,8 +19,8 @@ public class ReportsService {
     }
 
     public List<WaterIntakeReportDTO> getReport(Long userId,
-                                                OffsetDateTime startDate,
-                                                OffsetDateTime endDate,
+                                                LocalDate startDate,
+                                                LocalDate endDate,
                                                 Granularity granularity) {
 
         AggregationStrategy strategy = strategyFactory.createStrategy(granularity);

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Granularity {
+
     DAILY("daily"),
     WEEKLY("weekly");
 
@@ -20,6 +21,7 @@ public enum Granularity {
             }
         }
 
+        // TODO: criar tratamento de erro no GlobalExceptionHandler
         throw new IllegalArgumentException("Invalid value for Granularity: " + value);
     }
 }

@@ -6,7 +6,7 @@ import com.drinkwater.apidrinkwater.reports.service.ReportsService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,8 +22,8 @@ public class ReportsController {
     @GetMapping("/consumption")
     public List<WaterIntakeReportDTO> findConsumptionReport(
         @PathVariable Long userId,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime startDate,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime endDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
         @RequestParam String granularity) {
 
         Granularity granularityEnum = Granularity.fromValue(granularity);
