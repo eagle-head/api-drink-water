@@ -44,6 +44,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         this.messageSource = messageSource;
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException exception,
+                                                                    WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String detail = exception.getMessage();
+        ProblemDetailResponseType type = ProblemDetailResponseType.ILLEGAL_ARGUMENT;
+        ProblemDetailResponse responseBody = createProblemDetailResponseBuilder(status, type, detail)
+            .userMessage(detail)
+            .build();
+
+        return this.handleExceptionInternal(exception, responseBody, new HttpHeaders(), status, request);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException exception, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -97,9 +110,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(
-        Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
-
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex,
+                                                             Object body,
+                                                             HttpHeaders headers,
+                                                             HttpStatusCode statusCode,
+                                                             WebRequest request) {
         HttpStatus status = HttpStatus.resolve(statusCode.value());
         String reasonPhrase = status != null ? status.getReasonPhrase() : "Unknown Status";
 
@@ -123,8 +138,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(
-        HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatusCode statusCode,
+                                                                  WebRequest request) {
         HttpStatus status = HttpStatus.resolve(statusCode.value());
         if (status == null) {
             status = HttpStatus.BAD_REQUEST;
@@ -148,9 +165,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleTypeMismatch(
-        TypeMismatchException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
-
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
+                                                        HttpHeaders headers,
+                                                        HttpStatusCode statusCode,
+                                                        WebRequest request) {
         HttpStatus status = HttpStatus.resolve(statusCode.value());
         if (status == null) {
             status = HttpStatus.BAD_REQUEST;
@@ -165,9 +183,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(
-        NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
-
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
+                                                                   HttpHeaders headers,
+                                                                   HttpStatusCode statusCode,
+                                                                   WebRequest request) {
         HttpStatus status = HttpStatus.resolve(statusCode.value());
         if (status == null) {
             status = HttpStatus.BAD_REQUEST;
@@ -185,10 +204,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
-
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatusCode statusCode,
+                                                                  WebRequest request) {
         ProblemDetailResponseType type = ProblemDetailResponseType.VALIDATION_ERROR;
-        String detail = "Validation error: some entries are incorrect or incomplete. Please review the details and correct them.";
+        String detail = "Validation error: some entries are incorrect or incomplete. "
+            + "Please review the details and correct them.";
 
         HttpStatus status = HttpStatus.resolve(statusCode.value());
         if (status == null) {
@@ -224,9 +246,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return this.handleExceptionInternal(ex, response, headers, status, request);
     }
 
-    private ResponseEntity<Object> handlePropertyBindingException(
-        PropertyBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
+    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
         String path = joinPath(ex.getPath());
         ProblemDetailResponseType type = ProblemDetailResponseType.MESSAGE_NOT_READABLE;
         String detail = String.format("The property '%s' does not exist. "
@@ -239,9 +262,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, response, headers, status, request);
     }
 
-    private ResponseEntity<Object> handleInvalidFormatException(
-        InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
+    private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
+                                                                HttpHeaders headers,
+                                                                HttpStatus status,
+                                                                WebRequest request) {
         String path = joinPath(ex.getPath());
         ProblemDetailResponseType type = ProblemDetailResponseType.MESSAGE_NOT_READABLE;
         String detail = String.format("The property '%s' received the value '%s', "
@@ -255,9 +279,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, response, headers, status, request);
     }
 
-    private ResponseEntity<Object> handleMethodArgumentTypeMismatch(
-        MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
+    private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                                    HttpHeaders headers,
+                                                                    HttpStatus status,
+                                                                    WebRequest request) {
         ProblemDetailResponseType type = ProblemDetailResponseType.TYPE_MISMATCH;
 
         String detail = String.format("The URL parameter '%s' received the value '%s', which is of an invalid type."

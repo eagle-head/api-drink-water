@@ -11,7 +11,9 @@ public enum ProblemDetailResponseType {
     TYPE_MISMATCH("Type mismatch error", "/type-mismatch"),
     UNEXPECTED_ERROR("Unexpected error occurred.", "/unexpected-error"),
     VALIDATION_ERROR("Validation error", "/validation-error"),
-    CONFLICT("Data conflict occurred.", "/data-conflict");
+    CONFLICT("Data conflict occurred.", "/data-conflict"),
+    ILLEGAL_ARGUMENT("Illegal argument error", "/illegal-argument");
+
 
     private final String title;
     private final String uri;
