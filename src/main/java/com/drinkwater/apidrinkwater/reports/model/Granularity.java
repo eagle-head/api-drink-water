@@ -21,7 +21,6 @@ public enum Granularity {
             }
         }
 
-        // TODO: criar tratamento de erro no GlobalExceptionHandler
         throw new IllegalArgumentException("Invalid value for Granularity: " + value);
     }
 }

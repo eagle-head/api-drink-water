@@ -17,7 +17,6 @@ public class WeeklyAggregationStrategy extends AbstractAggregationStrategy {
     protected void validateDates(LocalDate startDate, LocalDate endDate) {
         long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         if (daysBetween != 7) {
-            // TODO: criar tratamento de erro no GlobalExceptionHandler
             throw new IllegalArgumentException("The interval between start date and end date must be exactly one week (7 days) for weekly aggregation.");
         }
     }

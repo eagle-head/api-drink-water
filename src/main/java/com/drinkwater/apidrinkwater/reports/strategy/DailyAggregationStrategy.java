@@ -15,7 +15,6 @@ public class DailyAggregationStrategy extends AbstractAggregationStrategy {
     @Override
     protected void validateDates(LocalDate startDate, LocalDate endDate) {
         if (!startDate.isEqual(endDate)) {
-            // TODO: criar tratamento de erro no GlobalExceptionHandler
             throw new IllegalArgumentException("Start date and end date must be the same for daily aggregation.");
         }
     }
