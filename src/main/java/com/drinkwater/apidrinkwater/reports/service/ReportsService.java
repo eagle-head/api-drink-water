@@ -23,7 +23,7 @@ public class ReportsService {
                                                 LocalDate endDate,
                                                 Granularity granularity) {
 
-        AggregationStrategy strategy = strategyFactory.createStrategy(granularity);
+        AggregationStrategy strategy = this.strategyFactory.createStrategy(granularity);
 
         return strategy.aggregateData(userId, startDate, endDate);
     }
